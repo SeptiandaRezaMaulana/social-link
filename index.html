@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Metadata dan pengaturan dasar -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Septianda | Social Links</title>
+
+  <!-- Import Tailwind CSS dan Font Awesome untuk ikon -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    /* Import font Orbitron dan Space Mono dari Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Space+Mono&display=swap');
+
+    /* Gaya dasar body untuk dark mode */
+    body {
+      font-family: 'Space Mono', monospace;
+      background: linear-gradient(135deg, #000428, #01172a);
+      color: #fff;
+      margin: 0;
+      transition: background 0.5s, color 0.5s;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Mode terang */
+    body.light-mode {
+      background: #f7f7f7;
+      color: #111;
+    }
+
+    /* Judul utama */
+    .title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      color: #00f3ff;
+      text-shadow: 0 0 10px #00f3ff, 0 0 20px #008cff;
+    }
+
+    .light-mode .title {
+      color: #005577;
+      text-shadow: none;
+    }
+
+    /* Subjudul */
+    .subtitle {
+      color: #e0f7fa;
+    }
+
+    .light-mode .subtitle {
+      color: #333;
+    }
+
+    /* Gaya info jam realtime */
+    .realtime-info {
+      font-size: 1rem;
+      margin-left: auto;
+      color: #ccc;
+    }
+
+    .light-mode .realtime-info {
+      color: #444;
+    }
+
+    /* Wrapper icon sosial media */
+    .social-icons-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+      padding: 0 1rem;
+    }
+
+    /* Grid layout ikon sosial */
+    .social-icons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    /* Gaya tiap ikon */
+    .social-icon {
+      position: relative;
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      cursor: pointer;
+    }
+
+    .social-icon:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 200, 255, 0.6);
+    }
+
+    /* Menampilkan bio saat hover */
+    .social-icon:hover .bio-popup {
+      display: block;
+    }
+
+    /* Gaya ikon dan teks */
+    .social-icon i { font-size: 2rem; }
+    .social-icon p { margin-top: 0.5rem; font-size: 0.9rem; }
+
+    /* Bubble info bio mini */
+    .bio-popup {
+      display: none;
+      position: absolute;
+      bottom: 110%;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      max-width: 160px;
+      z-index: 100;
+      color: #fff;
+      white-space: pre-wrap;
+    }
+
+    /* Warna latar ikon per platform */
+    .whatsapp { background-color: #25D366; }
+    .facebook { background-color: #1877F2; }
+    .tiktok { background-color: #000; }
+    .shopee { background-color: #FF4C00; }
+    .github { background-color: #333; }
+    .instagram { background-color: #E1306C; }
+    .lynk { background-color: #00a7d0; }
+    .linkedin { background-color: #0077B5; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: inherit;
+    }
+
+    @media (max-width: 768px) {
+      .title { font-size: 2.2rem; }
+    }
+
+    /* Layer background animasi meteor/salju */
+    .space-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    /* Gaya dan animasi meteor */
+    .meteor {
+      position: absolute;
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(to right, yellow, transparent);
+      transform: rotate(45deg);
+      opacity: 0;
+      filter: blur(1px);
+      animation: meteor-fall linear infinite;
+    }
+
+    .light-mode .meteor {
+      background: linear-gradient(to right, black, transparent);
+    }
+
+    @keyframes meteor-fall {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translate(200vw, 300vh) rotate(45deg); opacity: 0; }
+    }
+
+    /* Gaya dan animasi salju */
+    .snow {
+      position: absolute;
+      top: -10px;
+      width: 10px;
+      height: 10px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: fall linear infinite;
+    }
+
+    .light-mode .snow {
+      background: black;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+
+    /* Tombol toggle tema */
+    .theme-toggle {
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body>
+  <!-- Lapisan animasi meteor & salju -->
+  <div class="space-background" id="animation-layer"></div>
+
+  <!-- Tombol toggle tema & realtime jam -->
+  <div class="text-center mt-6 flex justify-center items-center gap-4">
+    <button onclick="toggleTheme()" class="px-4 py-2 rounded text-white bg-gray-800 hover:bg-gray-700 transition inline-flex items-center gap-2">
+      <i id="theme-icon" class="fas fa-moon theme-toggle"></i>
+      <span id="theme-text">Dark Theme: On</span>
+    </button>
+    <span class="realtime-info" id="realtime"></span>
+  </div>
+
+  <!-- Header website -->
+  <header class="text-center pt-10">
+    <h1 class="title">Septianda Reza</h1>
+    <p class="subtitle">You can't love what you don't know</p>
+  </header>
+
+  <!-- Ikon sosial media + bubble bio -->
+  <div class="social-icons-wrapper">
+    <div class="social-icons">
+      <!-- Facebook -->
+      <a href="https://facebook.com/yourusername" class="social-icon facebook" target="_blank">
+        <i class="fab fa-facebook"></i><p>Facebook</p>
+        <div class="bio-popup">Ikuti saya di Facebook</div>
+      </a>
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/septian.reza06/" class="social-icon instagram" target="_blank">
+        <i class="fab fa-instagram"></i><p>Instagram</p>
+        <div class="bio-popup">Follow me</div>
+      </a>
+      <!-- LinkedIn -->
+      <a href="https://www.linkedin.com/in/septianda-reza/" class="social-icon linkedin" target="_blank">
+        <i class="fab fa-linkedin"></i><p>LinkedIn</p>
+        <div class="bio-popup">Profil profesional dan jaringan saya</div>
+      </a>
+      <!-- Lynk.id -->
+      <a href="soon.html" class="social-icon lynk" target="_blank">
+        <i class="fas fa-link"></i><p>Lynk id</p>
+        <div class="bio-popup">Lihat portofolio & karya saya di satu halaman</div>
+      </a>
+      <!-- Shopee -->
+      <a href="https://msha.ke/about_septianda" class="social-icon shopee" target="_blank">
+        <i class="fas fa-shopping-bag"></i><p>Shopee</p>
+        <div class="bio-popup">Beli produk recommendation saya</div>
+      </a>
+      <!-- TikTok -->
+      <a href="https://tiktok.com/@yourusername" class="social-icon tiktok" target="_blank">
+        <i class="fab fa-tiktok"></i><p>TikTok</p>
+        <div class="bio-popup">Lihat konten video saya</div>
+      </a>
+      <!-- WhatsApp -->
+      <a href="https://wa.me/your_number" class="social-icon whatsapp" target="_blank">
+        <i class="fab fa-whatsapp"></i><p>WhatsApp</p>
+        <div class="bio-popup">Hubungi langsung via WhatsApp</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Made with <i class="fas fa-heart text-red-400"></i> by SR Creation</p>
+  </div>
+
+  <script>
+    // Fungsi toggle dark/light mode
+    function toggleTheme() {
+      const body = document.body;
+      const icon = document.getElementById('theme-icon');
+      const text = document.getElementById('theme-text');
+      body.classList.toggle('light-mode');
+
+      if (body.classList.contains('light-mode')) {
+        icon.classList.replace('fa-moon', 'fa-sun');
+        text.textContent = 'Dark Theme: Off';
+      } else {
+        icon.classList.replace('fa-sun', 'fa-moon');
+        text.textContent = 'Dark Theme: On';
+      }
+    }
+
+    // Update realtime dalam format 24 jam dan tanggal dd/mm/yyyy
+    const realtime = document.getElementById("realtime");
+    function updateTime() {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      realtime.textContent = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Membuat animasi meteor secara acak
+    const layer = document.getElementById('animation-layer');
+    for (let i = 0; i < 15; i++) {
+      const meteor = document.createElement('div');
+      meteor.classList.add('meteor');
+      meteor.style.top = Math.random() * -100 + 'vh';
+      meteor.style.left = Math.random() * 100 + 'vw';
+      meteor.style.animationDelay = `${Math.random() * 10}s`;
+      meteor.style.animationDuration = `${3 + Math.random() * 3}s`;
+      layer.appendChild(meteor);
+    }
+
+    // Membuat animasi salju secara acak
+    for (let i = 0; i < 20; i++) {
+      const snow = document.createElement('div');
+      snow.classList.add('snow');
+      snow.style.left = `${Math.random() * 100}%`;
+      snow.style.animationDuration = `${3 + Math.random() * 5}s`;
+      snow.style.animationDelay = `${Math.random() * 5}s`;
+      snow.style.width = snow.style.height = `${Math.random() * 6 + 4}px`;
+      layer.appendChild(snow);
+    }
+  </script>
+</body>
+</html>

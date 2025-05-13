@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coming Soon | SR Creation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Space+Mono&display=swap');
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background: linear-gradient(135deg, #000428, #01172a);
+      color: #fff;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    .title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      color: #00f3ff;
+      text-shadow: 0 0 10px #00f3ff, 0 0 20px #008cff;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      background-color: #00f3ff;
+      color: #01172a;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background-color: #008cff;
+      color: white;
+    }
+
+    @keyframes spin-slow {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .animate-spin-slow {
+      animation: spin-slow 20s linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- Ikon jam dekoratif animasi -->
+    <div class="text-6xl mb-4 animate-spin-slow">
+      <i class="fas fa-clock text-cyan-400 drop-shadow-lg"></i>
+    </div>
+    <h1 class="title">Coming Soon</h1>
+    <p class="mt-4 text-lg">Our new line of ebook is arriving shortly,<br>so stay tuned for updates!</p>
+    <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i><span>Kembali</span></a>
+  </main>
+
+  <footer class="bg-black text-white py-4 text-center text-sm font-light w-full">
+    <p>&copy; 2025 SR Creation. All rights reserved.</p>
+  </footer>
+</body>
+</html>

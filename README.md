@@ -14,8 +14,8 @@ Latar belakang penuh bintang dengan meteor jatuh yang dinamis menciptakan suasan
 🌓 **Dark/Light Mode Toggle**  
 Ubah tampilan sesuai kenyamanan mata Anda — satu klik untuk gelap atau terang.
 
-📆 **Real-Time Info**  
-Menampilkan jam & tanggal saat ini dengan format 24 jam (`HH:mm`) dan tanggal `dd/mm/yyyy`.
+📆 **Real-Time Info + Ucapan Waktu Otomatis**  
+Menampilkan jam & tanggal saat ini secara real-time dengan format lengkap, disertai ucapan seperti "Selamat pagi", "Selamat sore", atau "Selamat malam" secara otomatis.
 
 📱 **Sosial Media Interaktif**  
 Tautan sosial media lengkap (Instagram, TikTok, Facebook, Shopee, LinkedIn, Lynk.id, WhatsApp) dengan pop-up bio setiap ikon.

@@ -8,6 +8,9 @@
 
 ## ✨ Fitur Unggulan
 
+📊 **Loader dengan Animasi Persentase**  
+Animasi loader yang menunjukkan persentase pemuatan halaman, memberikan feedback visual kepada pengguna. Persentase akan terupdate secara dinamis sesuai proses pemuatan konten.
+
 🔭 **Meteor & Star Animation**  
 Latar belakang penuh bintang dengan meteor jatuh yang dinamis menciptakan suasana galaksi yang hidup.
 
@@ -33,7 +36,7 @@ Desain fleksibel dan optimal di semua ukuran layar — dari desktop hingga peran
 - **HTML5** + **Tailwind CSS**
 - **Font Awesome** (ikon sosial & dekoratif)
 - **Google Fonts** (Orbitron & Space Mono)
-- **Vanilla JavaScript** (untuk jam real-time & animasi)
+- **Vanilla JavaScript** (untuk jam real-time, animasi & loader)
 
 ---
 

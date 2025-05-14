@@ -114,16 +114,35 @@
     .tiktok { background-color: #000; }
     .shopee { background-color: #FF4C00; }
     .github { background-color: #333; }
-    .instagram { background-color: #E1306C; }
-    .lynk { background-color: #00a7d0; }
+    .instagram {
+      background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+      color: white;
+    }
+    .lynk { background-color: #00b140; }
     .linkedin { background-color: #0077B5; }
+    .youtube { background-color: #FF0000; }
 
     .footer {
       text-align: center;
       margin-top: 3rem;
-      color: inherit;
+      color: #ccc;
+      transition: color 0.3s ease;
     }
-
+    .light-mode .footer {
+      color: #222;
+    }
+    .footer i {
+      color: #f87171; /* Tailwind red-400 */
+    }
+    .footer span {
+      font-weight: bold;
+      color: #00f3ff; /* biru neon */
+      transition: color 0.3s ease;
+    }
+    .light-mode .footer span {
+      color: #005577;
+    }
+    
     @media (max-width: 768px) {
       .title { font-size: 2.2rem; }
     }
@@ -279,9 +298,14 @@
   </div>
 
   <!-- Footer -->
-  <div class="footer">
-    <p>Made with <i class="fas fa-heart text-red-400"></i> by SR Creation</p>
-  </div>
+  <footer class="mt-12 px-6 py-6 text-sm flex flex-col items-center justify-center gap-2 transition-all duration-300">
+    <div class="flex items-center gap-2">
+     <p>Made with <i class="fas fa-heart"></i> by <span>SR Creation</span></p>
+    </div>
+    <div class="text-gray-400 dark:text-gray-600">
+      &copy; <span id="year"></span> All rights reserved.
+    </div>
+  </footer>
 
   <script>
     function toggleTheme() {
@@ -360,6 +384,8 @@
     scrollBtn.onclick = function () {
       window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll dengan efek smooth
     };
+    // Set tahun otomatis di footer
+    document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>

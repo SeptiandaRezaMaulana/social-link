@@ -82,7 +82,11 @@
   </main>
 
   <footer class="bg-black text-white py-4 text-center text-sm font-light w-full">
-    <p>&copy; 2025 SR Creation. All rights reserved.</p>
+    <p>&copy; <span id="year"></span> SR Creation. All rights reserved.</p>
   </footer>
 </body>
+<script>
+  // Ambil elemen dengan id 'year' dan set isinya dengan tahun saat ini
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 </html>

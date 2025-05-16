@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Coming Soon | SR Creation</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Space+Mono&display=swap');
 
@@ -17,16 +17,6 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-    }
-
-    main {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem 1rem;
-      text-align: center;
     }
 
     .title {
@@ -68,25 +58,89 @@
     .animate-spin-slow {
       animation: spin-slow 20s linear infinite;
     }
+
+    .countdown {
+      font-size: 2rem;
+      margin-top: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    @media (max-width: 640px) {
+      .title {
+        font-size: 2rem;
+      }
+
+      .countdown {
+        font-size: 1.5rem;
+      }
+
+      p {
+        font-size: 0.95rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <main>
-    <!-- Ikon jam dekoratif animasi -->
-    <div class="text-6xl mb-4 animate-spin-slow">
-      <i class="fas fa-clock text-cyan-400 drop-shadow-lg"></i>
+  <main class="flex-grow flex flex-col justify-center items-center text-center px-4">
+    <div id="clock-icon" class="text-6xl mb-4 text-cyan-400 drop-shadow-lg animate-spin-slow">
+      <i class="fas fa-clock"></i>
     </div>
-    <h1 class="title">Coming Soon</h1>
-    <p class="mt-4 text-lg">Our new line of ebook is arriving shortly,<br>so stay tuned for updates!</p>
-    <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i><span>Kembali</span></a>
+
+    <h1 id="main-title" class="title mb-2">Loading...</h1>
+    <p id="description" class="text-lg">Please wait a moment while we prepare something amazing for you...</p>
+    <div id="countdown" class="countdown hidden">00d 00h 00m 00s</div>
+
+    <a id="btn-back" href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i><span>Kembali</span></a>
   </main>
 
   <footer class="bg-black text-white py-4 text-center text-sm font-light w-full">
     <p>&copy; <span id="year"></span> SR Creation. All rights reserved.</p>
   </footer>
+
+  <script>
+    // Tahun otomatis di footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Target waktu countdown
+    const launchDate = new Date("2025-05-17T00:35:00").getTime();
+
+    const titleEl = document.getElementById("main-title");
+    const descEl = document.getElementById("description");
+    const countdownEl = document.getElementById("countdown");
+    const clockIcon = document.getElementById("clock-icon");
+    const backBtn = document.getElementById("btn-back");
+
+    setTimeout(() => {
+      titleEl.textContent = "Coming Soon";
+      descEl.textContent = "Our new line of ebook is arriving shortly, so stay tuned for updates!";
+      countdownEl.classList.remove("hidden");
+
+      const timer = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = launchDate - now;
+
+        if (distance <= 0) {
+          clearInterval(timer);
+          titleEl.textContent = "Launched 🎉";
+          descEl.style.display = "none";
+          countdownEl.textContent = "00d 00h 00m 00s";
+          clockIcon.classList.remove("animate-spin-slow");
+          backBtn.style.display = "none"; // Sembunyikan tombol kembali
+
+          // Redirect otomatis setelah beberapa detik
+          setTimeout(() => {
+            window.location.href = "portfolio.html"; // Ganti dengan URL yang diinginkan
+          }, 2000); // Redirect 2 detik setelah status "Launched"
+        } else {
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+      }, 1000);
+    }, 1500);
+  </script>
 </body>
-<script>
-  // Ambil elemen dengan id 'year' dan set isinya dengan tahun saat ini
-  document.getElementById('year').textContent = new Date().getFullYear();
-</script>
 </html>

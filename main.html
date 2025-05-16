@@ -6,7 +6,8 @@
   <title>Septianda | Social Links</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Space+Mono&display=swap');
 
@@ -247,6 +248,54 @@
     #scrollTopBtn:focus {
       outline: none; /* Menghilangkan garis fokus saat tombol di-klik */
     }
+    .announcement-wrapper {
+    overflow: hidden;
+    white-space: nowrap;
+    border-top: 1px solid rgba(0, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+    margin: 1rem auto 2rem;
+    max-width: 90vw;
+    }
+    .announcement-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll-left 20s linear infinite;
+      font-size: 1rem;
+      color: #00f3ff;
+      font-weight: 600;
+      font-family: 'Orbitron', sans-serif;
+      outline: none;
+    }
+    body.light-mode .announcement-text {
+      color: #0077a3;
+    }
+    @keyframes scroll-left {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+    /* Responsif */
+    @media (max-width: 768px) {
+      .announcement-text {
+        font-size: 0.9rem;
+        animation-duration: 25s;
+      }
+    }
+    @media (max-width: 400px) {
+      .announcement-text {
+        font-size: 0.8rem;
+        animation-duration: 30s;
+      }
+    @media (max-width: 600px) {
+      .announcement-wrapper {
+      font-size: 14px;
+      padding: 8px;
+      }
+    }
+  }
   </style>
 </head>
 <body>
@@ -273,6 +322,10 @@
   <header class="text-center pt-10">
     <h1 class="title">Septianda Reza</h1>
     <p class="subtitle">You can't love what you don't know</p>
+    <!-- Text berjalan di bawah subtitle -->
+    <div class="announcement-wrapper" id="announcement-wrapper" aria-live="polite" aria-atomic="true" role="region" style="display:none;">
+      <p class="announcement-text" id="announcement-text" tabindex="0"></p>
+    </div>
   </header>
 
   <!-- Sosial -->
@@ -347,13 +400,12 @@
 
     // Meteor
     const layer = document.getElementById('animation-layer');
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 20; i++) {
       const meteor = document.createElement('div');
       meteor.classList.add('meteor');
-      meteor.style.top = Math.random() * -100 + 'vh';
-      meteor.style.left = Math.random() * 100 + 'vw';
-      meteor.style.animationDelay = `${Math.random() * 10}s`;
-      meteor.style.animationDuration = `${3 + Math.random() * 3}s`;
+      meteor.style.top = `${Math.random() * window.innerHeight}px`;
+      meteor.style.left = `${Math.random() * window.innerWidth}px`;
+      meteor.style.animationDuration = `${2 + Math.random() * 3}s`;
       layer.appendChild(meteor);
     }
 
@@ -373,11 +425,7 @@
 
     // Menampilkan tombol saat scroll ke bawah lebih dari 100px
     window.onscroll = function () {
-      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-        scrollBtn.style.display = "block";
-      } else {
-        scrollBtn.style.display = "none";
-      }
+      scrollBtn.style.display = window.scrollY > 300 ? "block" : "none";
     };
 
     // Fungsi untuk scroll kembali ke atas
@@ -386,6 +434,25 @@
     };
     // Set tahun otomatis di footer
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    // API untuk mengambil dan menampilkan data di Google Apps Script
+    fetch('https://script.google.com/macros/s/AKfycbx-WQJyH5YG5Qh4j-FT65QNzzRlVvY-Yv9dS6_bcpGano7QpSkZt_tFth2SqM34XGk72A/exec')
+    .then(response => response.json())
+    .then(data => {
+      const announcement = data.find(item => {
+        const now = new Date();
+        const start = new Date(item.start_date);
+        const end = new Date(item.end_date);
+        return now >= start && now <= end;
+      });
+      
+      if (announcement) {
+        const ticker = document.getElementById('announcement-text');
+        ticker.textContent = announcement.message;
+        document.getElementById('announcement-wrapper').style.display = 'block';
+      }
+    })
+    .catch(error => console.error('Error:', error));
   </script>
 </body>
 </html>

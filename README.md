@@ -20,8 +20,17 @@ Ubah tampilan sesuai kenyamanan mata Anda — satu klik untuk gelap atau terang.
 📆 **Real-Time Info + Ucapan Waktu Otomatis**  
 Menampilkan jam & tanggal saat ini secara real-time dengan format lengkap, disertai ucapan seperti "Selamat pagi", "Selamat sore", atau "Selamat malam" secara otomatis.
 
+📢 **Teks Berjalan Dinamis (Announcement)**  
+Menampilkan pengumuman yang diatur dari Google Sheets. Teks otomatis muncul sesuai waktu yang ditentukan dan menghilang ketika waktunya selesai — tanpa perlu backend.
+
+⏱️ **Countdown Timer + Akses Tombol Otomatis**  
+Setiap kartu eBook memiliki hitung mundur waktu rilis. Setelah waktu habis, tombol "Dapatkan Sekarang" akan otomatis aktif dan bisa diarahkan ke halaman download/link tujuan.
+
 📱 **Sosial Media Interaktif**  
 Tautan sosial media lengkap (Instagram, TikTok, Facebook, Shopee, LinkedIn, Lynk.id, WhatsApp) dengan pop-up bio setiap ikon.
+
+🚀 **Tombol Scroll to Top**  
+Tombol akan muncul saat pengguna scroll ke bawah, dan dengan sekali klik akan membawa kembali ke bagian atas halaman.
 
 🪐 **Coming Soon Page**  
 Halaman khusus untuk fitur yang akan datang, dengan animasi ikon jam dan tombol kembali.
@@ -36,7 +45,11 @@ Desain fleksibel dan optimal di semua ukuran layar — dari desktop hingga peran
 - **HTML5** + **Tailwind CSS**
 - **Font Awesome** (ikon sosial & dekoratif)
 - **Google Fonts** (Orbitron & Space Mono)
-- **Vanilla JavaScript** (untuk jam real-time, animasi & loader)
+- **Vanilla JavaScript** (
+  - Real-time clock & greeting
+  - Countdown timer & tombol unlock otomatis
+  - Dark/light mode toggle
+  - Mobile menu interaction)
 
 ---
 

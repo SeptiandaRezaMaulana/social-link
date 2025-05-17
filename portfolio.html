@@ -89,19 +89,20 @@
   </div>
 
    <div class="w-full px-4 flex-grow">
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto px-2">
       <div class="mt-6 mb-4 flex justify-end px-2">
         <input type="text" id="searchInput" placeholder="Cari ..." class="px-3 py-1 w-60 text-sm rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-800 text-black dark:text-white" />
       </div>
       <main class="mb-10 flex-grow px-2">
         <h2 class="text-2xl font-bold mb-4">Ebook</h2>
         <div id="ebookContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="ebook-card bg-white dark:bg-slate-800 rounded-lg shadow-md p-4 flex flex-col justify-between h-full" data-title="Judul Ebook A">
-            <img src="img/sukses.png" alt="Cover Ebook" class="rounded mb-4 w-full h-48 object-cover">
+          <div class="ebook-card flex flex bg-white dark:bg-slate-800 rounded-lg shadow-md p-4 flex flex-col justify-between h-full" data-title="Judul Ebook A">
+            <img src="img/sukses.png" alt="Cover Ebook" class="rounded mb-4 w-full h-48 object-cover sm:object-contain">
             <h3 class="text-base font-semibold mb-2 line-clamp-3 leading-snug md:text-lg">KESUKSESAN DAPAT KITA RAIH DENGAN JALUR LANGIT DAN KONSEP YANG TERSTRUKTUR</h3>
             <p class="text-sm mb-4">Deskripsi singkat ebook A.</p>
             <div class="timer text-sm text-center text-cyan-500 mb-2"></div>
-            <a class="download-btn bg-cyan-500 text-white py-2 px-4 rounded text-center font-medium pointer-events-none opacity-50 transition-all">Dapatkan Sekarang</a>
+            <div class="flex justify-center"></div>
+            <a class="download-btn w-full sm:w-auto bg-cyan-500 text-white py-2 px-4 rounded text-center font-medium pointer-events-none opacity-50 transition-all">Dapatkan Sekarang</a>
           </div>
         </div>
       </main>
@@ -165,52 +166,112 @@
       mobileMenu.classList.add("-translate-x-full");
     });
 
-    const cards = document.querySelectorAll(".ebook-card");
-    const launchDates = [
-      new Date("2025-06-06T15:00:00"),
-    ];
-    const downloadLinks = [
-      "https://linka.com",
-    ];
+    // Ganti dengan URL Google Sheets CSV publik kamu
+    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeH4GPahHXYXPXRKeP19WKT-Fi6PINEWqbshCPiuRtKJepUtmm778a18OKxO4qnpu39hZFD-HBPks5/pub?gid=0&single=true&output=csv';
 
-    cards.forEach((card, index) => {
-      const timerEl = card.querySelector(".timer");
-      const btn = card.querySelector(".download-btn");
-      let linkSet = false;
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      const headers = lines.shift().split(',');
 
-      const update = () => {
-        const now = new Date();
-        const diff = launchDates[index] - now;
-
-        if (diff <= 0 && !linkSet) {
-          timerEl.textContent = "";
-          btn.classList.remove("pointer-events-none", "opacity-50");
-          btn.setAttribute("href", downloadLinks[index]);
-          btn.setAttribute("target", "_blank"); // opsional: buka di tab baru
-          btn.textContent = "Dapatkan Sekarang";
-          linkSet = true;
-        } else if (diff > 0) {
-          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-          timerEl.textContent = `Rilis dalam ${days}d ${hours}j ${minutes}m ${seconds}d`;
-          btn.textContent = "Segera Hadir";
-        }
-      };
-      update();
-      setInterval(update, 1000);
-    });
-
-    const searchInput = document.getElementById("searchInput");
-    searchInput.addEventListener("input", () => {
-      const filter = searchInput.value.toLowerCase();
-      document.querySelectorAll(".ebook-card").forEach(card => {
-        const textContent = card.textContent.toLowerCase();
-        card.style.display = textContent.includes(filter) ? "block" : "none";
+      return lines.map(line => {
+        const values = line.split(',');
+        let obj = {};
+        headers.forEach((header, i) => {
+          obj[header.trim()] = values[i] ? values[i].trim() : '';
+        });
+        return obj;
       });
-      // Cek ulang visibilitas tombol scroll
-      handleScrollTopVisibility();
+    }
+
+    function fixDateTimeString(dtStr) {
+      let [date, time] = dtStr.split('T');
+      let [year, month, day] = date.split('-');
+      month = month.padStart(2, '0');
+      day = day.padStart(2, '0');
+      if (!time) time = "00:00:00";
+      else if (time.length === 5) time += ':00'; // tambah detik jika belum ada
+      return `${year}-${month}-${day}T${time}+07:00`;
+    }
+
+    fetch(sheetUrl)
+    .then(res => res.text())
+    .then(data => {
+      const items = parseCSV(data);
+      // console.log("Data dari Google Sheets:", items);
+
+      const cards = document.querySelectorAll(".ebook-card");
+
+      cards.forEach(card => {
+        const title = card.getAttribute('data-title')?.trim();
+        const timerEl = card.querySelector(".timer");
+        const btn = card.querySelector(".download-btn");
+        // console.log(`Memproses card: ${title}`);
+
+        const item = items.find(i => i.title === title);
+
+        if (!item) {
+          // console.log(`Tidak ada data untuk title: ${title}`);
+          timerEl.textContent = '';
+          btn.classList.add('pointer-events-none', 'opacity-50');
+          btn.textContent = 'Segera Hadir';
+          return;
+        }
+        let linkSet = false;
+        // console.log(`launchDate (raw): ${item.launchDate}`);
+        let launchDateStr = item.launchDate.replace(' ', 'T');
+        launchDateStr = fixDateTimeString(launchDateStr);
+        // console.log(`launchDate (fixed): ${launchDateStr}`);
+
+        const launchDate = new Date(launchDateStr);
+        // console.log(`launchDate (Date object): ${launchDate.toString()}`);
+
+        if (isNaN(launchDate.getTime())) {
+          // console.error("Tanggal launch tidak valid!");
+          timerEl.textContent = 'Tanggal rilis tidak valid';
+          btn.classList.add('pointer-events-none', 'opacity-50');
+          btn.textContent = 'Segera Hadir';
+          return;
+        }
+        const update = () => {
+          const now = new Date();
+          const diff = launchDate - now;
+          // console.log(`Waktu sekarang: ${now.toString()}, selisih: ${diff} ms`);
+
+          if (diff <= 0 && !linkSet) {
+            timerEl.textContent = "";
+            btn.classList.remove("pointer-events-none", "opacity-50");
+            btn.setAttribute("href", item.downloadLink);
+            btn.setAttribute("target", "_blank");
+            btn.textContent = "Dapatkan Sekarang";
+            linkSet = true;
+            // console.log(`Tombol diaktifkan untuk ${title}`);
+          } else if (diff > 0) {
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            timerEl.textContent = `Rilis dalam ${days}d ${hours}j ${minutes}m ${seconds}s`;
+            btn.textContent = "Segera Hadir";
+            btn.classList.add("pointer-events-none", "opacity-50");
+            linkSet = false;
+          }
+        };
+        update();
+        setInterval(update, 1000);
+      });
+    })
+    .catch(err => {
+      console.error('Gagal load data dari Google Sheets:', err);
+    });
+    
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      document.querySelectorAll(".ebook-card").forEach(card => {
+        const title = card.querySelector("h3").textContent.toLowerCase();
+        const match = title.includes(query);
+        card.style.display = match ? "flex" : "none";
+      });
     });
 
     const scrollTopBtn = document.getElementById("scrollTopBtn");

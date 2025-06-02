@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Space+Mono&display=swap');
-
     body {
       font-family: 'Space Mono', monospace;
       background: linear-gradient(135deg, #000428, #01172a);
@@ -18,14 +17,12 @@
       display: flex;
       flex-direction: column;
     }
-
     .title {
       font-family: 'Orbitron', sans-serif;
       font-size: 3rem;
       color: #00f3ff;
       text-shadow: 0 0 10px #00f3ff, 0 0 20px #008cff;
     }
-
     .btn-back {
       display: inline-flex;
       align-items: center;
@@ -40,44 +37,28 @@
       text-decoration: none;
       transition: background-color 0.3s ease;
     }
-
     .btn-back:hover {
       background-color: #008cff;
       color: white;
     }
-
     @keyframes spin-slow {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
-
     .animate-spin-slow {
       animation: spin-slow 20s linear infinite;
     }
-
-    .countdown {
-      font-size: 2rem;
-      margin-top: 1.5rem;
-      font-weight: bold;
-      color: #fff;
+    .pulse {
+      animation: pulse 0.5s ease-in-out;
     }
-
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
     @media (max-width: 640px) {
-      .title {
-        font-size: 2rem;
-      }
-
-      .countdown {
-        font-size: 1.5rem;
-      }
-
-      p {
-        font-size: 0.95rem;
-      }
+      .title { font-size: 2rem; }
+      p { font-size: 0.95rem; }
     }
   </style>
 </head>
@@ -86,12 +67,32 @@
     <div id="clock-icon" class="text-6xl mb-4 text-cyan-400 drop-shadow-lg animate-spin-slow">
       <i class="fas fa-clock"></i>
     </div>
-
     <h1 id="main-title" class="title mb-2">Loading...</h1>
     <p id="description" class="text-lg">Please wait a moment while we prepare something amazing for you...</p>
-    <div id="countdown" class="countdown hidden">00d 00h 00m 00s</div>
 
-    <a id="btn-back" href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i><span>Kembali</span></a>
+    <!-- COUNTDOWN GRID -->
+    <div id="countdown" class="hidden mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-white">
+      <div class="bg-cyan-500/10 border border-cyan-400/40 p-4 rounded-xl shadow-lg backdrop-blur-sm">
+        <div id="days" class="text-5xl font-bold tracking-widest transition-transform duration-300">00</div>
+        <div class="text-sm mt-1 uppercase tracking-widest">Days</div>
+      </div>
+      <div class="bg-cyan-500/10 border border-cyan-400/40 p-4 rounded-xl shadow-lg backdrop-blur-sm">
+        <div id="hours" class="text-5xl font-bold tracking-widest transition-transform duration-300">00</div>
+        <div class="text-sm mt-1 uppercase tracking-widest">Hours</div>
+      </div>
+      <div class="bg-cyan-500/10 border border-cyan-400/40 p-4 rounded-xl shadow-lg backdrop-blur-sm">
+        <div id="minutes" class="text-5xl font-bold tracking-widest transition-transform duration-300">00</div>
+        <div class="text-sm mt-1 uppercase tracking-widest">Minutes</div>
+      </div>
+      <div class="bg-cyan-500/10 border border-cyan-400/40 p-4 rounded-xl shadow-lg backdrop-blur-sm">
+        <div id="seconds" class="text-5xl font-bold tracking-widest transition-transform duration-300">00</div>
+        <div class="text-sm mt-1 uppercase tracking-widest">Seconds</div>
+      </div>
+    </div>
+
+    <a id="btn-back" href="index.html" class="btn-back">
+      <i class="fas fa-arrow-left"></i><span>Kembali</span>
+    </a>
   </main>
 
   <footer class="bg-black text-white py-4 text-center text-sm font-light w-full">
@@ -99,22 +100,27 @@
   </footer>
 
   <script>
-    // Tahun otomatis di footer
-    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-    // Target waktu countdown
-    const launchDate = new Date("2025-05-17T00:35:00").getTime();
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRIISIqY7J52FoDZ-OohvsAU9wWqaEVE1gDMXsOzqWJTmo5FaIohv3m3-kqgXmdbWK6potNeUEjO-KD/pub?gid=0&single=true&output=csv";
 
-    const titleEl = document.getElementById("main-title");
-    const descEl = document.getElementById("description");
-    const countdownEl = document.getElementById("countdown");
-    const clockIcon = document.getElementById("clock-icon");
-    const backBtn = document.getElementById("btn-back");
+    function runCountdown(launchDate) {
+      const titleEl = document.getElementById("main-title");
+      const descEl = document.getElementById("description");
+      const countdownEl = document.getElementById("countdown");
+      const clockIcon = document.getElementById("clock-icon");
+      const backBtn = document.getElementById("btn-back");
 
-    setTimeout(() => {
+      const daysEl = document.getElementById("days");
+      const hoursEl = document.getElementById("hours");
+      const minutesEl = document.getElementById("minutes");
+      const secondsEl = document.getElementById("seconds");
+
       titleEl.textContent = "Coming Soon";
       descEl.textContent = "Our new line of ebook is arriving shortly, so stay tuned for updates!";
       countdownEl.classList.remove("hidden");
+
+      let prevSecond = null;
 
       const timer = setInterval(() => {
         const now = new Date().getTime();
@@ -124,7 +130,10 @@
           clearInterval(timer);
           titleEl.textContent = "Launched 🎉";
           descEl.style.display = "none";
-          countdownEl.textContent = "00d 00h 00m 00s";
+          daysEl.textContent = "00";
+          hoursEl.textContent = "00";
+          minutesEl.textContent = "00";
+          secondsEl.textContent = "00";
           clockIcon.classList.remove("animate-spin-slow");
           backBtn.style.display = "none"; // Sembunyikan tombol kembali
 
@@ -137,10 +146,63 @@
           const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
           const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-          countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+          daysEl.textContent = String(days).padStart(2, "0");
+          hoursEl.textContent = String(hours).padStart(2, "0");
+          minutesEl.textContent = String(minutes).padStart(2, "0");
+          secondsEl.textContent = String(seconds).padStart(2, "0");
+
+          // Pulse animation saat detik berubah
+          if (prevSecond !== seconds) {
+            secondsEl.classList.remove("pulse");
+            void secondsEl.offsetWidth; // trigger reflow
+            secondsEl.classList.add("pulse");
+            prevSecond = seconds;
+          }
         }
       }, 1000);
-    }, 1500);
+    }
+
+    fetch(sheetURL)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok " + response.statusText);
+        }
+        return response.text();
+      })
+      .then(csvData => {
+        const lines = csvData.trim().split("\n");
+        const header = lines[0].split(",");
+        const launchIndex = header.findIndex(h => h.trim().toLowerCase() === "launchdate");
+
+        if (launchIndex === -1) throw new Error("LaunchDate column not found in CSV");
+
+        const rawDateStr = lines[1].split(",")[launchIndex].trim();
+        console.log("Tanggal dari Sheet:", rawDateStr);
+
+        let launchDate;
+
+        if (rawDateStr.match(/^\d{2}-\d{2}-\d{4}/)) {
+          const [day, month, year] = rawDateStr.split(" ")[0].split("-");
+          const timePart = rawDateStr.split(" ")[1] || "00:00:00";
+          const [hour, minute, second] = timePart.split(":");
+          launchDate = new Date(year, month - 1, day, hour, minute, second).getTime();
+        } else if (rawDateStr.match(/^\d{4}-\d{1,2}-\d{1,2}/)) {
+          const [year, month, day] = rawDateStr.split(" ")[0].split("-");
+          const timePart = rawDateStr.split(" ")[1] || "00:00:00";
+          const [hour, minute, second] = timePart.split(":");
+          launchDate = new Date(year, month - 1, day, hour, minute, second).getTime();
+        } else {
+          throw new Error("Format tanggal tidak dikenali: " + rawDateStr);
+        }
+
+        runCountdown(launchDate);
+      })
+      .catch(error => {
+        console.error("Gagal ambil tanggal dari Google Sheets:", error);
+        const fallbackDate = new Date(2099, 11, 31, 23, 59, 59).getTime();
+        runCountdown(fallbackDate);
+      });
   </script>
 </body>
 </html>
